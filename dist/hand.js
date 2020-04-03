@@ -1,6 +1,8 @@
-export default class Hand {
+class Hand {
     constructor(cards) {
-        this.PrivateCards=cards;
+        this.cards=cards;
 
     }
 }
+
+exports.Hand = Hand;

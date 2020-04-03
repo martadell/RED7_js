@@ -1,6 +1,8 @@
 class Palette {
     constructor(cards) {
-        this.PrivateCards=cards;
+        this.cards=cards;
     }
 }
+
+exports.Palette = Palette;
 

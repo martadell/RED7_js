@@ -1,13 +1,10 @@
-export default class Card {
+ class Card {
     constructor(color, number, extraRule) {
-        this.privateColor = color;
-        this.privateNumber = numer;
-        this.privateExtraRule = extraRule;
-    }
-
-    get color() { return this.privateColor; }
-    get number() { return this.privateNumber; }
-    get extraRule() { return this.privateExtraRule; }
-    
+        this.color = color;
+        this.number = number;
+        this.extraRule = extraRule;
+    }    
 }
+
+exports.Card = Card;
 
