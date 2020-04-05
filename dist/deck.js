@@ -1,4 +1,6 @@
 const { Card } = require('./card');
+const { Hand } = require('./hand');
+const { Palette } = require('./palette');
 
 class Deck {
     constructor() {
@@ -6,23 +8,12 @@ class Deck {
     }
 
     createDeck() {
-        let Colors = ["red", "orange", "yellow", "green", "blue", "indigo", "purple"];
-        let Numbers = [1, 2, 3, 4, 5, 6, 7];
-        let ExtraRules = [0, 1, 3, 5, 7];
+        const Colors = ["red", "orange", "yellow", "green", "blue", "indigo", "purple"];
+        const Numbers = [1, 2, 3, 4, 5, 6, 7];
 
         for (let i=0; i < Colors.length; i++) {
             for (let j = 0; j < Numbers.length; j++) {
-                if (j === 0) {
-                this.deck.push(new Card(Colors[i], Numbers[j], ExtraRules[1]));
-                } else if (j === 2) {
-                    this.deck.push(new Card(Colors[i], Numbers[j], ExtraRules[2]));
-                } else if (j === 4) {
-                    this.deck.push(new Card(Colors[i], Numbers[j], ExtraRules[3]));
-                } else if (j === 6) {
-                    this.deck.push(new Card(Colors[i], Numbers[j], ExtraRules[4]));
-                } else {
-                    this.deck.push(new Card(Colors[i], Numbers[j], ExtraRules[0]));
-                }
+                this.deck.push(new Card(Colors[i], Numbers[j]));
             }
         }
 
@@ -43,13 +34,13 @@ class Deck {
     }
 
     newHand() { 
-        //treu (i retorna a una hand) les 7 primeres cartes de la pila
-        let hand = [];
-        while (hand.length < 7) {
-            hand.push(this.deck.shift());
-        }
+        let hand = new Hand([]);        
+        return hand.newHand(this.deck);
+    }
 
-        return hand;
+    newPalette() {
+        let palette = new Palette([]);
+        return palette.newPalette(this.deck);
     }
 
     drawOne(hand) {
@@ -63,7 +54,9 @@ class Deck {
     }   
 
     takeFirstRule() {
-        return this.deck.shift();
+        let rule = new Card;
+        rule = this.deck.shift();
+        return rule.getColor();
     }
 
     addOne(card) {
