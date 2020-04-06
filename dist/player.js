@@ -17,7 +17,7 @@ class Player {
         return this.palette;
     }
     
-    fromHandtoPalette(indexC) {
+    fromHandToPalette(indexC) {
         this.palette.addToPalette(this.takeCardFromHand(indexC));
     }
 
