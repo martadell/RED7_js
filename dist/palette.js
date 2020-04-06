@@ -136,9 +136,8 @@ class Palette {
     }
 
     addToPalette(card) {
-        if(this.cards.length < 7) { 
-            this.cards.push(card);
-            this.sortPalette(); }
+        this.cards.push(card);
+        this.sortPalette();
     }
 
     takeFromPalette(card) {

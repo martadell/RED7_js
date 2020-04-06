@@ -29,16 +29,6 @@ class Deck {
         }
     }
 
-    drawOne(hand) {
-        if (hand.length < 7) { //comprova que no tingui més de 7 cartes
-        return hand.push(this.cards.pop());
-        }
-
-        else { //sino no roba
-            console.log("hand length is too long, can't draw card");
-        }
-    }
-
     takeOne() {
         return this.cards.pop();
     }

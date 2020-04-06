@@ -10,15 +10,15 @@ class Hand {
 }
 
   addToHand(card) {
-    if(this.cards.length < 7) this.cards.push(card);
+    this.cards.push(card);
   }
 
-  getCardbyIndex(index) {
-    return this.cards[index];
-  }
-
-  takeFromHand(card) {
-    if(this.cards.length > 0) this.cards.splice((this.cards.indexOf(card)),1);
+  takeFromHand(indexC) {
+    if(-1 < indexC && this.cards.length > indexC) {
+      if(this.cards.length > 1) return this.cards.splice(indexC,1)[0];
+      else console.log("Can't take card from hand, you don't have enought cards");
+    }
+    return false;
   }
 
 }

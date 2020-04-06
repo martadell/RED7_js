@@ -17,17 +17,16 @@ class Player {
         return this.palette;
     }
     
-    fromHandtoPalette(card) {
-        this.palette.addToPalette(card);
-        this.hand.takeFromHand(card);
+    fromHandtoPalette(indexC) {
+        this.palette.addToPalette(this.takeCardFromHand(indexC));
+    }
+
+    takeCardFromHand(indexC) {
+        return this.hand.takeFromHand(indexC);
     }
 
     containsCard(card) {
         return this.palette.containsCard(card);
-    }
-
-    getHandCardByIndex(index) {
-        return this.hand.getCardbyIndex(index);
     }
 
     getRulePalette(rule) {
