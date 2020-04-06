@@ -1,14 +1,10 @@
 class Palette {
-    constructor(cards) {
-        this.cards = cards;
+    constructor() {
+        this.cards = [];
     }
 
-    newPalette(deck) {
-        let palette = [];
-        palette.push(deck.shift());
-        palette.sortPalette();
-
-        return palette;
+    createPalette(deckCard) {
+        this.cards.push(deckCard);
     }
 
     sortPalette() { //ordena la palette del 7 a l'1 (i de vermell a lila)
@@ -41,8 +37,7 @@ class Palette {
 
     calcSameNum() { //orange rule: return les maximes cartes repetides (mateix numero)let numbers = [[]];
         let prevCard = this.cards[0];
-
-        console.log(this.cards);
+        let numbers = [[]];
 
         this.cards.forEach((card) => { //1. fem un array d'arrays amb cartes del mateix numero 
             if(card.getNumber() !== prevCard.getNumber()) numbers.push([]);
@@ -59,8 +54,6 @@ class Palette {
         let colors = [[]];
         let prevCard = this.cards[0];
 
-        console.log(this.cards);
-
         this.cards.forEach((card) => { //1. fem un array d'arrays amb cartes del mateix color  
             if(card.getColor() !== prevCard.getColor()) colors.push([]);
             colors[colors.length - 1].push(card);
@@ -69,7 +62,26 @@ class Palette {
 
         this.sortPalette(); //ordenem per numeros perque quedi com abans
 
-        colors.sort((a, b) => b.length - a.length); //2. i agafem el més llarg
+        colors.sort((a, b) => {
+            while(a !== undefined && b !== undefined) {
+            if (a.length > b.length) {
+                return -1;
+            } 
+            if (a.length < b.length) {
+                return +1;
+            }            
+            if (a.length === b.length) {
+                if((a[0]).isHigher(b[0])) {
+                    return -1;
+                }
+                else {
+                    return +1;
+                }
+            }
+            return 0;
+            }
+        }); //2. i agafem el més llarg
+
         return colors[0];
     }
 
@@ -89,7 +101,7 @@ class Palette {
         let prevCard = this.cards[0];
 
         this.cards.forEach((card) => {                  //per cada carta
-            if(card.getColor() != prevCard.getColor()) { //si al nostre array no hi ha carta de color se li fiica
+            if(card.getColor() != prevCard.getColor()) { //si al nostre array no hi ha carta de color se li fica
                 difColorCards.push(card);
                 prevCard = card;                         //i el color passa ser el que hem ficat
             }
@@ -126,11 +138,53 @@ class Palette {
     addToPalette(card) {
         if(this.cards.length < 7) { 
             this.cards.push(card);
-            this.cards.sortPalette(); }
+            this.sortPalette(); }
     }
 
     takeFromPalette(card) {
-        if(this.cards.length > 0) this.cards.splice((this.cards.indexOf(card)-1),1);
+        if(this.cards.length > 0) this.cards.splice((this.cards.indexOf(card)),1);
+    }
+
+    getCardbyIndex(index) {
+        return this.cards[index];
+    }
+
+    containsCard(card2){
+        let y = false;
+        this.cards.forEach((card) => {
+            if (card.isSameCard(card2)) y = true;
+        });
+        return y;
+    }
+
+    getRulePalette(ruleCard) {
+        let colors = ["red", "orange", "yellow", "green", "blue", "indigo", "purple"];
+        let ruleP = [];
+
+        switch (ruleCard.getColor()){
+            case colors[0]:
+            ruleP = this.calcHighest();
+            break;
+            case colors[1]:
+            ruleP = this.calcSameNum();
+            break;
+            case colors[2]:
+            ruleP = this.calcSameColor();
+            break;
+            case colors[3]:
+            ruleP = this.calcEvens();
+            break;
+            case colors[4]:
+            ruleP = this.calcDifColor();
+            break;
+            case colors[5]:
+            ruleP = this.calcRun();
+            break;
+            case colors[6]:
+            ruleP = this.calcBellowFour();
+            break;
+        }
+        return ruleP; 
     }
 }
 
