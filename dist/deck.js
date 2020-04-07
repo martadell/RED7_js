@@ -2,7 +2,7 @@ const { Card } = require('./card');
 
 class Deck {
     constructor() {
-        this.cards = [];
+        this._cards = [];
     }
 
     createDeck() {
@@ -11,7 +11,7 @@ class Deck {
 
         for (let i=0; i < colors.length; i++) {
             for (let j = 0; j < numbers.length; j++) {
-                this.cards.push(new Card(colors[i], numbers[j]));
+                this._cards.push(new Card(colors[i], numbers[j]));
             }
         }
 
@@ -19,34 +19,34 @@ class Deck {
     }
     
     shuffleDeck() {
-        let counter = this.cards.length, temp, i;
+        let counter = this._cards.length, temp, i;
 
         while (counter) {
             i = Math.floor(Math.random() * counter--);
-            temp = this.cards[counter];
-            this.cards[counter] = this.cards[i];
-            this.cards[i] = temp;
+            temp = this._cards[counter];
+            this._cards[counter] = this._cards[i];
+            this._cards[i] = temp;
         }
     }
 
     takeOne() {
-        return this.cards.pop();
+        return this._cards.pop();
     }
 
     takeSeven() {
         let sCards=[];
         for(let i=0;i<7;i++) {
-            sCards.push(this.cards.pop());
+            sCards.push(this._cards.pop());
         }
         return sCards;
     }
 
     addOne(card) {
-        this.cards.push(card);
+        this._cards.push(card);
     }
 
     getLength(){
-        return this.cards.length;
+        return this._cards.length;
     }
 }
 

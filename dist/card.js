@@ -1,14 +1,14 @@
  class Card {
     constructor(color, number) {
-        this.color = color;
-        this.number = number;
+        this._color = color;
+        this._number = number;
     }
 
-    getColor() {
-        return this.color;
+    get color() {
+        return this._color;
     }
 
-    getRule() {
+    get rule() {
         let rule;
         let colors = ["red", "orange", "yellow", "green", "blue", "indigo", "purple"];
         switch (this.color){
@@ -37,25 +37,25 @@
         return rule; 
     }
 
-    getNumber() {
-        return this.number;
+    get number() {
+        return this._number;
     }
 
     isHigher(card2) {
-        if(this.number > card2.getNumber()) return true;
-        else if(this.number === card2.getNumber()) return this.isHigherColor(card2);
-        else return false;
+        if(this.number > card2.number) return true;
+        if(this.number === card2.number) return this.isHigherColor(card2);
+        return false;
     }
 
     isHigherColor(card2) {
     let colors = ["purple", "indigo", "blue", "green", "yellow", "orange", "red"];
-        if(colors.indexOf(this.color) > colors.indexOf(card2.getColor())) return true;
-        else return false;
+        if(colors.indexOf(this.color) > colors.indexOf(card2.color)) return true;
+        return false;
     }
 
     isSameCard(card2) {
-        return ((this.getColor() === card2.getColor() &&
-        this.getNumber() === card2.getNumber()));
+        return ((this.color === card2.color) &&
+        (this.number === card2.number));
     }
 }
 

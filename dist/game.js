@@ -1,74 +1,115 @@
+const { Deck } = require("./deck");
+const { Palette } = require("./palette");
+const { Hand } = require("./hand");
+const { Player } = require("./player");
+
 class Game {
-    constructor(deck, rule, players) {
-        this.deck = deck;
-        this.rule=rule;
-        this.players=players;
-        this.currentPlayer=0;
+    constructor() {
+        this._deck;
+        this._rule;
+        this._players=[];
+        this._currentPlayer;
     }
 
-    getRule() {
-        return this.rule.getRule();
+    newGame(qPlayers) {
+        this._deck = new Deck();
+        this._deck.createDeck();
+
+        for(let i=0; i<qPlayers; i++) {
+        let hand = new Hand();
+        hand.createHand(this._deck.takeSeven());
+        let palette = new Palette();
+        palette.createPalette(this._deck.takeOne());
+
+        this._players.push(new Player(`Player ${i+1}`, hand, palette));
+        this._rule = this._deck.takeOne();
+        this._currentPlayer=0;
+        }
+    }
+
+    get rule() {
+        return this._rule;
+    }   
+
+    get ruleInfo() {
+        return this.rule.rule;
+    }    
+
+    get players() {
+        return this._players;
+    }
+
+    get currentPlayer() {
+        return this._currentPlayer;
     }
 
     changeRule(rule) {
-        this.rule=rule;
-    }
-
-    getCurrentPlayer() {
-        return this.currentPlayer;
+        this._rule=rule;
     }
 
     makeMove(option, iCard1, iCard2) {
-        console.log(this.players[this.currentPlayer].getName() +  "'s turn");
+        console.log(this.players[this.currentPlayer].name +  "'s turn");
         switch(option) {
         case 1:
             console.log("case 1: play a hand's card to the palette");
-            this.players[this.currentPlayer].fromHandToPalette(iCard1);
+            this._players[this.currentPlayer].fromHandToPalette(iCard1);
+            console.log("palette changed to: " + this.players[this.currentPlayer].palette);
             if (!this.compareRulePalettes()) this.loseGame();
+            else {
+                console.log("OK, next turn!");
+                this.nextPlayer();
+            }
             break;
         case 2:
             console.log("case 2: play a hand's card as a rule");
-            this.changeRule(this.players[this.currentPlayer].takeCardFromHand(iCard1));
+            this.changeRule(this._players[this.currentPlayer].takeCardFromHand(iCard1));
+            console.log("current rule: " + this.ruleInfo);
             if (!this.compareRulePalettes()) this.loseGame();
+            else {
+                console.log("OK, next turn!");
+                this.nextPlayer();
+            }
             break;
         case 3:
             console.log("case 3: play a hand's card to the palette and a hand's card as a rule");
-            this.players[this.currentPlayer].fromHandToPalette(iCard1);
-            this.changeRule(this.players[this.currentPlayer].takeCardFromHand(iCard2));
+            this._players[this.currentPlayer].fromHandToPalette(iCard1);
+            this.changeRule(this._players[this.currentPlayer].takeCardFromHand(iCard2));
             if (!this.compareRulePalettes()) this.loseGame();
+            else {
+                console.log("OK, next turn!");
+                this.nextPlayer();
+            }
             break;
         case 4:
             console.log("case 4: pass (and lose)");
             this.loseGame();
             break;
         }
+    }
 
-        if (this.currentPlayer++ > this.players.length) {
-            this.currentPlayer === 0;
+    nextPlayer() {
+        if (this.currentPlayer+2 > this._players.length) {
+            this._currentPlayer = 0;
         }
         else  {
-            this.currentPlayer++;
+            this._currentPlayer++;
         }
     }
 
     loseGame() {        
-        console.log("Oh no, " +  this.players[this.currentPlayer].getName() + " loses!");
-        this.removeCurrentPlayer();
-    }
-
-    removeCurrentPlayer(){
-        this.players.splice(this.players[this.currentPlayer],1);
+        console.log("Oh no, " +  this.players[this.currentPlayer].name + " loses!");
+        this._players.splice(this.currentPlayer,1);
     }
 
     compareRulePalettes() {
         let palettes=[];
 
-        this.players.forEach(p => {
+        this._players.forEach(p => {
             palettes.push(p.getRulePalette(this.rule));
         });
 
         palettes.sort((a, b) => {
-            if(a.length !==0) { //filtre per si estàn buides
+            if(a.length !==0) { //filtre per si estan buides
             if (a.length > b.length) {
                 return -1;
             } 
