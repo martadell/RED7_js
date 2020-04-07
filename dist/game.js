@@ -73,7 +73,9 @@ class Game {
         case 3:
             console.log("case 3: play a hand's card to the palette and a hand's card as a rule");
             this._players[this.currentPlayer].fromHandToPalette(iCard1);
+            console.log("palette changed to: " + this.players[this.currentPlayer].palette);
             this.changeRule(this._players[this.currentPlayer].takeCardFromHand(iCard2));
+            console.log("current rule: " + this.ruleInfo);
             if (!this.compareRulePalettes()) this.loseGame();
             else {
                 console.log("OK, next turn!");
@@ -99,6 +101,7 @@ class Game {
     loseGame() {        
         console.log("Oh no, " +  this.players[this.currentPlayer].name + " loses!");
         this._players.splice(this.currentPlayer,1);
+        if(this.currentPlayer+1 > this._players.length) this._currentPlayer = 0;
     }
 
     compareRulePalettes() {

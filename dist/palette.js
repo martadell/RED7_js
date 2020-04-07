@@ -39,7 +39,7 @@ class Palette {
         return this._cards[0]; //com està ordenat per valors treu la primera
     }
 
-    calcSameNum() { //orange rule: return les maximes cartes repetides (mateix numero)let numbers = [[]];
+    calcSameNum() { //orange rule: return les maximes cartes repetides (mateix numero)
         let prevCard = this._cards[0];
         let numbers = [[]];
 
