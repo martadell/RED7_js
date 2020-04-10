@@ -1,41 +1,45 @@
 class Player {
-    constructor(name, hand, palette) {
-        this._name = name;
-        this._hand = hand;
-        this._palette = palette;
-    }
+  constructor(name, hand, palette) {
+    this._name = name;
+    this._hand = hand;
+    this._palette = palette;
+  }
 
-    get name() {
-        return this._name;
-    }
+  get name() {
+    return this._name;
+  }
 
-    get hand() {
-        return this._hand;
-    }
+  get hand() {
+    return this._hand;
+  }
 
-    get palette() {
-        return this._palette;
-    }
-    
-    fromHandToPalette(indexC) {
-        this._palette.addToPalette(this.takeCardFromHand(indexC));
-    }
+  get palette() {
+    return this._palette;
+  }
 
-    takeCardFromHand(indexC) {
-        return this.hand.takeFromHand(indexC);
-    }
+  fromHandToPalette(indexC) {
+    this._palette.addToPalette(this.takeCardFromHand(indexC));
+  }
 
-    addToHand(card) {
-        this._hand.addToHand(card);
-    }
+  takeCardFromHand(indexC) {
+    return this.hand.takeFromHand(indexC);
+  }
 
-    containsCard(card) {
-        return this._palette.containsCard(card);
-    }
+  takeCardFromPalette(indexC) {
+    return this.palette.takeFromPalette(indexC);
+  }
 
-    getRulePalette(rule) {
-        return this._palette.getRulePalette(rule); 
-    }
+  addToHand(card) {
+    this._hand.addToHand(card);
+  }
+
+  containsCard(card) {
+    return this._palette.containsCard(card);
+  }
+
+  getRulePalette(rule) {
+    return this._palette.getRulePalette(rule);
+  }
 }
 
 exports.Player = Player;

@@ -1,1 +1,221 @@
-/*todo: (si hi ha temps) disseny cartes
+body {
+  font-family: "Montserrat";
+  font-size: 22px;
+}
+
+header {
+  display: flex;
+  background-color: rgb(228, 57, 57);
+  margin-left: 0.5rem;
+}
+
+header h1 {
+  font-size: 6rem;
+  font-family: "Reem Kufi";
+  color: white;
+  padding-left: 0.5rem;
+  margin: 0;
+}
+
+header #title {
+  flex-grow: 1;
+}
+
+header div {
+  align-self: flex-end;
+}
+
+header span {
+  color: white;
+  font-size: 1rem;
+}
+
+header p {
+  margin: -2rem 1rem 1rem 1rem;
+}
+
+header img {
+  height: 1rem;
+  width: auto;
+}
+
+#players {
+  justify-content: space-between;
+}
+
+#players-info {
+  display: flex;
+  align-items: center;
+  flex-wrap: nowrap;
+  flex-direction: row;
+  margin-top: 0.5rem;
+  align-self: flex-end;
+}
+
+#players-info select {
+  font-family: "Montserrat";
+}
+
+#players-info button {
+  background-color: rgb(110, 110, 110);
+  color: white;
+  font-family: "Montserrat";
+  padding: 0.5rem;
+  margin: 0 0.5rem;
+  border: none;
+}
+
+#bttns {
+  display: flex;
+}
+
+.selected {
+  background-color: rgb(228, 57, 57) !important;
+}
+
+#bttns button {
+  background-color: rgb(110, 110, 110);
+  color: white;
+  font-family: "Montserrat";
+  font-size: 1rem;
+  padding: 1rem;
+  margin: 0 0.5rem;
+  border: none;
+}
+
+#bttns button:hover,
+#players-info button:hover {
+  background-color: rgb(228, 57, 57);
+  cursor: pointer;
+}
+
+#finishBttn {
+  display: none;
+}
+
+#board {
+  display: flex;
+  flex-direction: column;
+}
+
+h2 {
+  font-size: large;
+}
+
+h3 {
+  font-size: medium;
+}
+
+p {
+  padding-left: 0.5rem;
+}
+
+.box {
+  flex-wrap: nowrap;
+  background-color: rgb(209, 209, 209);
+  padding: 1rem;
+  border: 0.5rem solid white;
+}
+
+.right {
+  text-align: center;
+}
+
+.h {
+  display: flex;
+  align-items: flex-start;
+}
+
+.cards {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  flex-grow: 1;
+}
+
+.card {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: solid white 0.3rem;
+  border-radius: 25px;
+  height: 7.5rem;
+  width: 5rem;
+  color: white;
+  font-size: 7rem;
+  font-family: "Reem Kufi";
+  margin: 0 0.5rem;
+}
+
+.card:hover {
+  cursor: pointer;
+  box-shadow: inset 0 0 0 1000px rgba(143, 143, 143, 0.5);
+}
+
+.rules {
+  height: 181.922;
+  width: 100rem;
+  overflow-y: scroll;
+  font-size: 1rem;
+}
+
+#hand,
+#palettes {
+  width: 780px;
+  flex-shrink: 0;
+}
+
+#hand {
+  height: 130px;
+}
+
+.red {
+  background-color: rgb(228, 57, 57);
+}
+
+.orange {
+  background-color: rgb(255, 189, 65);
+}
+
+.yellow {
+  background-color: rgb(240, 240, 62);
+}
+
+.green {
+  background-color: rgb(75, 180, 75);
+}
+
+.blue {
+  background-color: rgb(117, 117, 221);
+}
+
+.indigo {
+  background-color: rgb(49, 41, 121);
+}
+
+.purple {
+  background-color: rgb(105, 38, 105);
+}
+
+.empty {
+  display: none;
+}
+
+#deck {
+  background-color: rgb(102, 102, 102);
+}
+
+#deck span {
+  transform: rotate(270deg);
+  font-size: 2rem;
+  text-align: center;
+  margin-left: 0.5rem;
+}
+
+.box span {
+  line-height: 25px;
+}
+
+.unavailable {
+  box-shadow: inset 0 0 0 1000px rgba(255, 255, 255, 0.5);
+}

@@ -1,10 +1,111 @@
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../src/style.css" />
+    <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet'>
+    <link href='https://fonts.googleapis.com/css?family=Reem Kufi' rel='stylesheet'>
+    <link rel="icon" type="svg" href="../src/red7.svg">
     <title>RED7 Cards game</title>
 </head>
+
 <body>
-    <script src="bundle.js"></script>
+    <header>
+        <div id="title">
+            <h1>RED7</h1>
+            <p>The card game</p>
+        </div>
+
+        <div>
+            <p><span>by Marta Adell</span> <a href="https://github.com/martadell">
+                    <img src="../src/github.svg" alt="github" /></a></p>
+        </div>
+    </header>
+
+    <div>
+        <div class="h" id="players">
+            <p id="aPlayer">Player 1's turn</p>
+            <div id="players-info">
+                <p>Select number of players:
+                    <select id="playersNum">
+                        <option value="0">2</option>
+                        <option value="1">3</option>
+                        <option selected value="2">4</option>
+                    </select>
+                    <button id="restartBttn">restart</button></p>
+            </div>
+        </div>
+        <div class="buttons">
+            <div id="bttns">
+                <button id="ctPaletteBttn">Play hand's card to the palette</button>
+                <button id="caRuleBttn">Play hand's card as a rule</button>
+                <button id="passBttn">Pass (and lose)</button>
+                <button id="finishBttn">Finish</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="board">
+        <div class="h">
+            <div class="box">
+                <h3>Current player's hand</h3>
+                <div class="cards h" id="hand">
+                </div>
+            </div>
+            <div class="box right" id="rule">
+                <h2>Rule</h2>
+            </div>
+
+            <div class="box rules">
+                <h2>Color rules:</h2>
+                <p>
+                    <span class="red">Red</span>: Highest card<br>
+                    <span class="orange">Orange</span>: Cards of one number<br>
+                    <span class="yellow">Yellow</span>: Cards of one color<br>
+                    <span class="green">Green</span>: Even cards<br>
+                    <span class="blue">Blue</span>: Cards of all different colors<br>
+                    <span class="indigo">Indigo</span>: Cards that form a run (I.E. 4 5 6)<br>
+                    <span class="purple">Purple</span>: Cards bellow 4<br>
+                </p>
+            </div>
+        </div>
+
+        <div class="h">
+            <div id="palettes" class="box">
+                <h3>Player 1's palette</h3>
+                <div class="palette h" id="p1">
+                </div>
+                <h3>Player 2's palette</h3>
+                <div class="palette h" id="p2">
+                </div>
+                <h3>Player 3's palette</h3>
+                <div class="palette h" id="p3">
+                </div>
+                <h3>Player 4's palette</h3>
+                <div class="palette h non-selectable" id="p4">
+                </div>
+            </div>
+            <div class="box right">
+                <h2>Deck</h2>
+                <div class="card" id="deck"><span>RED7</span></div>
+            </div>
+            <div class="box rules">
+                <h2>Action rules:</h2>
+                <p>
+                    <strong>1</strong>: Choose a card from another player's Palette,
+                    and place it face down on top of the Draw Deck. You may not
+                    choose a player with fewer Palette cards than you.<br>
+                    <strong>3</strong>: Draw a card from the Draw Deck.<br>
+                    <strong>5</strong>: Play another card from your hand to your
+                    Palette. You can still discard to the Canvas after doing so.<br>
+                    <strong>7</strong>: Choose a card from your Palette and either
+                    discard it to the Canvas or place it face down on top of the Draw
+                    Deck. If you discard it, you must be winning afterward.<br>
+                </p>
+            </div>
+        </div>
+        <script type="text/javascript" src="bundle.js"></script>
 </body>
+
 </html>
