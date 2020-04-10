@@ -65,6 +65,15 @@ header img {
   border: none;
 }
 
+#aPlayer {
+  font-size: larger;
+}
+
+#aRule {
+  margin: 0 0 0.5rem 0;
+  color: rgb(228, 57, 57);
+}
+
 #bttns {
   display: flex;
 }
@@ -153,10 +162,18 @@ p {
 }
 
 .rules {
-  height: 181.922;
-  width: 100rem;
-  overflow-y: scroll;
+  width: 200rem;
   font-size: 1rem;
+}
+
+.colors {
+  height: 180.742px;
+  overflow-y: scroll;
+}
+
+.right .card:hover {
+  cursor: context-menu;
+  box-shadow: none;
 }
 
 #hand,

@@ -17,7 +17,7 @@ class Hand {
     if (this._cards.length > 0) return this._cards.splice(indexC, 1)[0];
   }
 
-  get handLength() {
+  get length() {
     return this._cards.length;
   }
 

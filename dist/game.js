@@ -10,6 +10,7 @@ class Game {
     this._players = [];
     this._currentPlayer;
     this._loser;
+    this._actionRule;
   }
 
   newGame(qPlayers) {
@@ -22,7 +23,7 @@ class Game {
       let palette = new Palette();
       palette.createPalette(this._deck.takeOne());
 
-      this._players.push(new Player(i + 1, hand, palette));
+      this._players.push(new Player(`p${i + 1}`, hand, palette));
     }
 
     this._rule = this._deck.takeOne();
@@ -49,8 +50,16 @@ class Game {
     return this._currentPlayer;
   }
 
-  changeRule(rule) {
-    this._rule = rule;
+  get actionRule() {
+    return this._actionRule;
+  }
+
+  get loser() {
+    return this._loser;
+  }
+
+  changeRule(ruleCard) {
+    this._rule = ruleCard;
   }
 
   makeMove(option, iCard1, iCard2) {
@@ -59,10 +68,8 @@ class Game {
       case 1:
         console.log("Case 1: play a hand's card to the palette");
         this._players[this.currentPlayer].fromHandToPalette(iCard1);
-        console.log(
-          "Palette changed to: ");
-          console.log(this.players[this.currentPlayer].palette.cards
-        );
+        console.log("Palette changed to: ");
+        console.log(this.players[this.currentPlayer].palette.cards);
         if (!this.compareRulePalettes()) this.loseGame(this.currentPlayer);
         else {
           console.log("OK, next turn!");
@@ -103,11 +110,11 @@ class Game {
     switch (option) {
       case 1:
         console.log("Case 1: play a hand's card to the palette");
+        let cardNum = this.players[this.currentPlayer].hand.cards[iCard].number;
+        this.checkActionRule(cardNum);
         this._players[this.currentPlayer].fromHandToPalette(iCard);
-        console.log(
-          "Palette changed to: ");
-          console.log(this.players[this.currentPlayer].palette.cards
-        );
+        console.log("Palette changed to: ");
+        console.log(this.players[this.currentPlayer].palette.cards);
         break;
       case 2:
         console.log("Case 2: play a hand's card as a rule");
@@ -135,14 +142,81 @@ class Game {
     }
   }
 
+  //Action rules only tested on index.js !!
+
+  checkActionRule(cardNum) {
+    if (cardNum == 1 || cardNum == 3 || cardNum == 5 || cardNum == 7)
+      this._actionRule = cardNum;
+    else this._actionRule = 0;
+  }
+
+  action1(iPlayer2, iP2Card) {
+    this._actionRule = 0;
+    //roba una carta d'un rival i descarta-la a la pila
+    let checkFirst = false; //primer mirem si és més petit que algun al menys
+    for (let i = 0; i < this.playersLength; i++) {
+      if (
+        this.players[i].palette.length >
+        this.players[this.currentPlayer].palette.length
+      )
+        checkFirst = true;
+    }
+
+    if (checkFirst) {
+      if (
+        this.players[this.currentPlayer].palette.length <
+        this.players[iPlayer2].palette.length
+      ) {
+        this.deck.addOne(this._players[iPlayer2].takeCardFromPalette(iP2Card));
+        return 1;
+      } else {
+        console.log(
+          "You selected a player with less cards than you, please choose another one"
+        );
+        return 0;
+      }
+    }
+  }
+
+  action3() {
+    //roba una carta
+    if (this.deck.length > 0) {
+      this.players[this.currentPlayer].addToHand(this.deck.takeOne());
+    } else {
+      console.log("Deck run out of cards, can't take another card");
+    }
+    this._actionRule = 0;
+  }
+
+  action5(iCard) {
+    //torna a jugar una carta a la palette
+    this.makeAMove(1, iCard);
+    this._actionRule = 0;
+  }
+
+  action7(iCard) {
+    this.changeRule(
+      this._players[this.currentPlayer].takeCardFromPalette(iCard)
+    );
+    this.makeAMove(4);
+    this._actionRule = 0;
+  }
+
+  action7discard(iCard) {
+    this.deck.addOne(
+      this._players[this.currentPlayer].takeCardFromPalette(iCard)
+    );
+    this._actionRule = 0;
+  }
+
   nextPlayer() {
-      this.players.forEach((player, index) => {
-        if(index != this.currentPlayer && player.hand.handLength == 0) {
-            this.loseGame(index);
-        }
+    this.players.forEach((player, index) => {
+      if (index != this.currentPlayer && player.hand.length == 0) {
+        this.loseGame(index);
+      }
     });
 
-    if (this.currentPlayer+1 >= this._players.length) {
+    if (this.currentPlayer + 1 >= this._players.length) {
       this._currentPlayer = 0;
     } else {
       this._currentPlayer++;
@@ -210,8 +284,14 @@ class Game {
     return false;
   }
 
-  get loser() {
-    return this._loser;
+  getPlayerIndexByName(name) {
+    for (let i = 0; i < this.players.length; i++) {
+      if (this.players[i].name == name) return i;
+    }
+  }
+
+  get playersLength() {
+    return this._players.length;
   }
 }
 

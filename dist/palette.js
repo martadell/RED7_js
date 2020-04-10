@@ -161,7 +161,7 @@ class Palette {
   }
 
   takeFromPalette(indexC) {
-    if (-1 < indexC && this._cards > indexC) {
+    if (-1 < indexC && this.length > indexC) {
       return this._cards.splice(indexC, 1)[0];
     }
   }
@@ -212,7 +212,7 @@ class Palette {
     return ruleP;
   }
 
-  get paletteLength() {
+  get length() {
     return this._cards.length;
   }
 }

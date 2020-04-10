@@ -18,11 +18,12 @@ let currentMove = 0;
 ////Restart: reinicia el joc amb el numero de jugadors seleccionats
 let restartBttn = document.getElementById("restartBttn");
 restartBttn.onclick = function () {
-
-  let retVal = confirm("Do you want to restart the game with " + numPlayers + " players?");
-  if (retVal == true) {
-  restart();
-  return true;
+  let aValue = confirm(
+    "Do you want to restart the game with the players you selected?"
+  );
+  if (aValue == true) {
+    restart();
+    return true;
   } else {
     return false;
   }
@@ -42,7 +43,7 @@ let caRuleBttn = document.getElementById("caRuleBttn");
 caRuleBttn.onclick = function () {
   currentMove = 2;
   caRuleBttn.classList.add("selected");
-  document.getElementById("ctPaletteBttn").style.display = "none";  
+  document.getElementById("ctPaletteBttn").style.display = "none";
   document.getElementById("finishBttn").style.display = "none";
 };
 
@@ -57,10 +58,10 @@ finishBttn.onclick = function () {
 ////Pass
 let passBttn = document.getElementById("passBttn");
 passBttn.onclick = function () {
-  let retVal = confirm(
+  let aValue = confirm(
     "Are you sure you want to pass? You will lose the game ):"
   );
-  if (retVal == true) {
+  if (aValue == true) {
     currentMove = 3;
     game.makeAMove(currentMove);
     checkWinner();
@@ -70,19 +71,7 @@ passBttn.onclick = function () {
   }
 };
 
-//Cartes
-////Hand: Sel·leccionar una carta de la hand
-let hCards = getHandCards();
-for (let i = 0; i < hCards.length; i++) {
-  hCards[i].onclick = function () {
-    if (currentMove == 0) alert("Please select first your game option");
-    else {
-      game.makeAMove(currentMove, i);
-      checkWinner();
-    }
-  };
-}
-
+//Funció per revisar si el jugador guanya a la ronda
 function checkWinner() {
   //actualitzem cartes
   changeHand();
@@ -90,7 +79,7 @@ function checkWinner() {
   changeRule();
 
   //treiem el color del botó seleccionat
-  if (document.getElementsByClassName("selected") !== undefined) {
+  if (document.getElementsByClassName("selected") != undefined) {
     let selectedBttns = document.getElementsByClassName("selected");
     for (let i = 0; i < selectedBttns.length; i++) {
       selectedBttns[i].classList.remove("selected");
@@ -99,35 +88,142 @@ function checkWinner() {
 
   //i tornem a mostrar el primer i amagar l'extra
   if (currentMove != 1) {
-    document.getElementById("ctPaletteBttn").style.display = "block";    
-    document.getElementById("finishBttn").style.display = "none";
-  currentMove = 0;
+    showButtons();
+    currentMove = 0;
   }
 
   //busquem si ha perdut algú i ho fiquem en blanc perquè es noti
   if (game.players.length < playersCont) {
-    document.getElementById(`p${game.loser}`).classList.add("unavailable");
+    document.getElementById(game.loser).classList.add("unavailable");
 
-    alert("Oh no! Player " + game.loser + " has lost");
+    alert("Oh no! Player " + game.loser.substring(1) + " has lost");
     playersCont--;
   }
 
   //canvi de torn al següent jugador al text d'adalt
-  document.getElementById("aPlayer").innerHTML = `Player ${
-    game.players[game.currentPlayer].name
-  }'s turn`;
+  document.getElementById("aPlayer").innerHTML = `Player ${game.players[
+    game.currentPlayer
+  ].name.substring(1)}'s turn`;
 
   if (game.players.length < 2) {
     //si acaba el joc es reinicia
-    alert("Game finished! The winner is Player " + game.players[0].name);
+    alert(
+      "Game finished! The winner is Player " + game.players[0].name.substring(1)
+    );
     restart();
     return false;
+  }
+}
+
+//Cartes
+////Hand: Al sel·leccionar una carta de la hand es jugarà a la palette
+let hCards = getHandCards();
+for (let i = 0; i < hCards.length; i++) {
+  hCards[i].onclick = function () {
+    if (currentMove == 0) alert("Please select first your game option");
+    else {
+      document.getElementById("aRule").innerHTML = "";
+      game.makeAMove(currentMove, i);
+      if (currentMove == 1) actionRuleMove();
+      checkWinner();
+      if (
+        game.actionRule != 5 &&
+        game.actionRule != 1 &&
+        game.actionRule != 7
+      ) {
+        currentMove = 0;
+        document.getElementById("aRule").innerHTML = "";
+        showButtons();
+      }
+    }
+    return false;
+  };
+}
+
+////Palettes: definim les paletes i què fer en cas de tocar una carta de la paleta (action rules)
+makeonClickPalette("p1");
+makeonClickPalette("p2");
+makeonClickPalette("p3");
+makeonClickPalette("p4");
+function makeonClickPalette(pName) {
+  let pCards = getPaletteCards(pName);
+
+  for (let i = 0; i < pCards.length; i++) {
+    pCards[i].onclick = function () {
+      //aqui mostrem només els botons de canviar regla i acbar
+      if (game.actionRule == 1 || game.actionRule == 7) {
+        document.getElementById("aRule").innerHTML = "";
+        showButtonsR();
+        if (
+          game.actionRule == 1 &&
+          game.players[game.currentPlayer].name != pName
+        ) {
+          let check = game.action1(game.getPlayerIndexByName(pName), i);
+          if (check == 0) {
+            alert(
+              "You selected a player with less cards than you, please chose another one"
+            );
+          }
+          if (check == 1) checkWinner();
+        } else if (
+          game.actionRule == 7 &&
+          game.players[game.currentPlayer].name == pName
+        ) {
+          let aValue = confirm(
+            "Play card as a new rule? (if not it will be discarded to the deck pile)"
+          );
+          if (aValue == true) {
+            game.action7(i);
+            checkWinner();
+            return true;
+          } else {
+            game.action7discard(i);
+            changePalettes();
+            return true;
+          }
+        }
+        return false;
+      }
+    };
+  }
+}
+
+//Action rules
+function actionRuleMove() {
+  switch (game.actionRule) {
+    case 1:
+      document.getElementById("aRule").innerHTML =
+        "Action rule: 1, choose a card from another player's palette";
+      hideButtons();
+      break;
+    case 3:
+      game.action3();
+      break;
+    case 5:
+      document.getElementById("aRule").innerHTML =
+        "Action rule: 5, select a second card to play to the palette";
+      hideButtons();
+      break;
+    case 7:
+      document.getElementById("aRule").innerHTML =
+        "Action rule: 7, choose a card from your palette";
+      hideButtons();
+      break;
+    default:
+      document.getElementById("aRule").innerHTML = "";
+      hideButtons();
+      break;
   }
 }
 
 function getHandCards() {
   let hCards = document.getElementById("hand").getElementsByClassName("card");
   return hCards;
+}
+
+function getPaletteCards(palette) {
+  let pCards = document.getElementById(palette).getElementsByClassName("card");
+  return pCards;
 }
 
 function restart() {
@@ -158,11 +254,30 @@ function restart() {
     }
   }
 
-  document.getElementById("aPlayer").innerHTML = `Player ${
-    game.players[game.currentPlayer].name
-  }'s turn`;
+  document.getElementById("aPlayer").innerHTML = `Player ${game.players[
+    game.currentPlayer
+  ].name.substring(1)}'s turn`;
 }
 
+function showButtons() {
+  //Es crida al acabar un moviment
+  document.getElementById("ctPaletteBttn").style.display = "block";
+  document.getElementById("caRuleBttn").style.display = "block";
+}
+
+function showButtonsR() {
+  //es crida al tirar un 1 o 7
+  document.getElementById("caRuleBttn").style.display = "block";
+  document.getElementById("finishBttn").style.display = "block";
+}
+
+function hideButtons() {
+  document.getElementById("ctPaletteBttn").style.display = "none";
+  document.getElementById("caRuleBttn").style.display = "none";
+  document.getElementById("finishBttn").style.display = "none";
+}
+
+//"Creadors" i "canviadors" d'elements
 function createHand() {
   createCards(game.players[game.currentPlayer].hand.cards, "hand");
 }
@@ -183,7 +298,7 @@ function changePalettes() {
   for (i = 0; i < numPlayers; i++) {
     if (game.players[i] != undefined) {
       let cards = game.players[i].palette.cards;
-      changeCards(cards, `p${game.players[i].name}`);
+      changeCards(cards, game.players[i].name);
     }
   }
 }
@@ -209,7 +324,6 @@ function changeCards(cards, place) {
 
 function changetoEmptyCards(place) {
   let pCards = document.getElementById(place).getElementsByClassName("card");
-  console.log(pCards);
   for (let i = 0; i < pCards.length; i++) {
     pCards[i].innerHTML = "";
     pCards[i].className = "card empty";

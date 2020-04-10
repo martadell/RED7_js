@@ -36,6 +36,7 @@
                     <button id="restartBttn">restart</button></p>
             </div>
         </div>
+        <p id="aRule"> </p>
         <div class="buttons">
             <div id="bttns">
                 <button id="ctPaletteBttn">Play hand's card to the palette</button>
@@ -57,7 +58,7 @@
                 <h2>Rule</h2>
             </div>
 
-            <div class="box rules">
+            <div class="box rules colors">
                 <h2>Color rules:</h2>
                 <p>
                     <span class="red">Red</span>: Highest card<br>
@@ -86,22 +87,29 @@
                 <div class="palette h non-selectable" id="p4">
                 </div>
             </div>
-            <div class="box right">
-                <h2>Deck</h2>
-                <div class="card" id="deck"><span>RED7</span></div>
-            </div>
             <div class="box rules">
                 <h2>Action rules:</h2>
                 <p>
                     <strong>1</strong>: Choose a card from another player's Palette,
                     and place it face down on top of the Draw Deck. You may not
                     choose a player with fewer Palette cards than you.<br>
-                    <strong>3</strong>: Draw a card from the Draw Deck.<br>
+                    <strong>3</strong>: Draw a card from the Draw Deck (automatically) .<br>
                     <strong>5</strong>: Play another card from your hand to your
                     Palette. You can still discard to the Canvas after doing so.<br>
                     <strong>7</strong>: Choose a card from your Palette and either
                     discard it to the Canvas or place it face down on top of the Draw
                     Deck. If you discard it, you must be winning afterward.<br>
+                    <br>
+                    <br>
+                    <br><strong>*notes:<br> 1.</strong> If you are playing with action rule 1 and there is
+                    no option for stealing another player's card (because your palette is longer 
+                    than everyone else's), it might still show the message for this rule in red on
+                    top of the page. If so, just click a random card from another player
+                    and it will be ignored (the card will work as a non-action rule card)<br>
+                    <strong>2.</strong> After playing the action rule 5 it might appear the button for
+                    choosing another card to play on the palette. Please ignore that option,
+                    it shouldn't be possible
+                    Thanks!!! (these small bugs couldn't be fixed on time ):
                 </p>
             </div>
         </div>
