@@ -29,40 +29,30 @@ restartBttn.onclick = function () {
   }
 };
 
-////Card to palette
+////Card to palette, es pitja abans de jugar una carta de la Hand a la Palette
 let ctPaletteBttn = document.getElementById("ctPaletteBttn");
 ctPaletteBttn.onclick = function () {
   currentMove = 1;
   ctPaletteBttn.classList.add("selected");
   document.getElementById("ctPaletteBttn").style.display = "none";
-  document.getElementById("finishBttn").style.display = "block";
 };
 
-////Card as rule
+////Card as rule, es pitja abans de jugar una carta de la Hand com a regla
 let caRuleBttn = document.getElementById("caRuleBttn");
 caRuleBttn.onclick = function () {
   currentMove = 2;
   caRuleBttn.classList.add("selected");
   document.getElementById("ctPaletteBttn").style.display = "none";
-  document.getElementById("finishBttn").style.display = "none";
 };
 
-////Finish (havent tirat carta a la palette)
+////Finish (havent tirat carta a la palette podem triar acabar el torn)
 let finishBttn = document.getElementById("finishBttn");
 finishBttn.onclick = function () {
-  currentMove = 4;
-  game.makeAMove(currentMove);
-  checkWinner();
-};
-
-////Pass
-let passBttn = document.getElementById("passBttn");
-passBttn.onclick = function () {
   let aValue = confirm(
-    "Are you sure you want to pass? You will lose the game ):"
+    "Are you sure you are done? You may lose the if you don't follow the actual color rule ):"
   );
   if (aValue == true) {
-    currentMove = 3;
+    currentMove = 4;
     game.makeAMove(currentMove);
     checkWinner();
     return true;
@@ -105,8 +95,8 @@ function checkWinner() {
     game.currentPlayer
   ].name.substring(1)}'s turn`;
 
-  if (game.players.length < 2) {
-    //si acaba el joc es reinicia
+  //si acaba el joc es reinicia
+  if (game.players.length < 2) {    
     alert(
       "Game finished! The winner is Player " + game.players[0].name.substring(1)
     );
@@ -126,7 +116,7 @@ for (let i = 0; i < hCards.length; i++) {
       game.makeAMove(currentMove, i);
       if (currentMove == 1) actionRuleMove();
       checkWinner();
-      if (
+      if ( //si no juguem una carta d'acció abans reiniciem el tema de botons i text de cartes d'acció
         game.actionRule != 5 &&
         game.actionRule != 1 &&
         game.actionRule != 7
@@ -150,39 +140,45 @@ function makeonClickPalette(pName) {
 
   for (let i = 0; i < pCards.length; i++) {
     pCards[i].onclick = function () {
-      //aqui mostrem només els botons de canviar regla i acbar
+      //aqui mostrem només els botons de canviar regla i acabar
       if (game.actionRule == 1 || game.actionRule == 7) {
-        document.getElementById("aRule").innerHTML = "";
-        showButtonsR();
-        if (
+        if (//si action rule = 1 i cliquem una carta que no sigui de la nostra paleta
           game.actionRule == 1 &&
           game.players[game.currentPlayer].name != pName
         ) {
+          document.getElementById("aRule").innerHTML = "";
+          showButtonsR();          
+          //mirem si la paleta jugadora no és més gran que les demés
           let check = game.action1(game.getPlayerIndexByName(pName), i);
           if (check == 0) {
             alert(
               "You selected a player with less cards than you, please chose another one"
             );
           }
-          if (check == 1) checkWinner();
+          if (check == 1) {
+            changePalettes();
+          }//sino seguim
         } else if (
+          //si action rule = 7 i cliquem una carta de la nostra paleta
           game.actionRule == 7 &&
           game.players[game.currentPlayer].name == pName
-        ) {
+        ) {          
+          document.getElementById("aRule").innerHTML = "";
+          showButtonsR();
+          //preguntem què volem fer amb la carta
           let aValue = confirm(
             "Play card as a new rule? (if not it will be discarded to the deck pile)"
-          );
+          );//jugar com a regla
           if (aValue == true) {
             game.action7(i);
             checkWinner();
             return true;
-          } else {
+          } else {//o retornar-la a la pila
             game.action7discard(i);
             changePalettes();
             return true;
           }
         }
-        return false;
       }
     };
   }
@@ -226,11 +222,13 @@ function getPaletteCards(palette) {
   return pCards;
 }
 
+//funció per reiniciar joc
 function restart() {
   let selector = document.getElementById("playersNum");
   numPlayers = parseInt(selector.options[selector.selectedIndex].text);
   playersCont = numPlayers;
 
+  //nou joc amb numero de jugadors seleccionats
   game = new Game();
   game.newGame(numPlayers);
 
@@ -254,6 +252,7 @@ function restart() {
     }
   }
 
+  //fiquem com a primer jugador el primer
   document.getElementById("aPlayer").innerHTML = `Player ${game.players[
     game.currentPlayer
   ].name.substring(1)}'s turn`;
@@ -268,13 +267,11 @@ function showButtons() {
 function showButtonsR() {
   //es crida al tirar un 1 o 7
   document.getElementById("caRuleBttn").style.display = "block";
-  document.getElementById("finishBttn").style.display = "block";
 }
 
 function hideButtons() {
   document.getElementById("ctPaletteBttn").style.display = "none";
   document.getElementById("caRuleBttn").style.display = "none";
-  document.getElementById("finishBttn").style.display = "none";
 }
 
 //"Creadors" i "canviadors" d'elements
@@ -431,6 +428,7 @@ function createCard(gCard) {
   return card;
 }
 
+//*les empty cards les volem per tenir lloc per les futures cartes de la palette o hand
 function createEmptyCard() {
   let emptyCard = document.createElement("div");
   emptyCard.className = "card empty";

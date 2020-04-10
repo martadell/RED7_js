@@ -108,42 +108,33 @@ class Game {
   makeAMove(option, iCard) {
     //!! versió alternativa per l'html
     switch (option) {
-      case 1:
-        console.log("Case 1: play a hand's card to the palette");
+      case 1: //cas 1: tirar carta a la paleta
         let cardNum = this.players[this.currentPlayer].hand.cards[iCard].number;
         this.checkActionRule(cardNum);
         this._players[this.currentPlayer].fromHandToPalette(iCard);
-        console.log("Palette changed to: ");
-        console.log(this.players[this.currentPlayer].palette.cards);
         break;
-      case 2:
-        console.log("Case 2: play a hand's card as a rule");
+      case 2: //cas 2: tirar carta a com a regla
         this.changeRule(
           this._players[this.currentPlayer].takeCardFromHand(iCard)
         );
-        console.log("Rule changed to: " + this.ruleInfo);
         if (!this.compareRulePalettes()) this.loseGame(this.currentPlayer);
         else {
-          console.log("OK, next turn!");
           this.nextPlayer();
         }
         break;
-      case 3:
-        console.log("Case 4: pass (and lose)");
+      case 3: //cas 3: passar i perdre
         this.loseGame(this.currentPlayer);
         break;
-      case 4: //!! (next)
+      case 4: //!! (next), es crida després del cas 1 si no es vol jugar regla també
         if (!this.compareRulePalettes()) this.loseGame(this.currentPlayer);
         else {
-          console.log("OK, next turn!");
           this.nextPlayer();
         }
         break;
     }
   }
 
-  //Action rules only tested on index.js !!
-
+  //ACTION RULES ONLY TESTED (and implemented) index.js !!
   checkActionRule(cardNum) {
     if (cardNum == 1 || cardNum == 3 || cardNum == 5 || cardNum == 7)
       this._actionRule = cardNum;
@@ -154,7 +145,7 @@ class Game {
     this._actionRule = 0;
     //roba una carta d'un rival i descarta-la a la pila
     let checkFirst = false; //primer mirem si és més petit que algun al menys
-    for (let i = 0; i < this.playersLength; i++) {
+    for (let i = 0; i < this.players.length; i++) {
       if (
         this.players[i].palette.length >
         this.players[this.currentPlayer].palette.length
@@ -209,6 +200,7 @@ class Game {
     this._actionRule = 0;
   }
 
+  //passar al següent jugador (i mirar si ha perdut)
   nextPlayer() {
     this.players.forEach((player, index) => {
       if (index != this.currentPlayer && player.hand.length == 0) {
@@ -223,6 +215,7 @@ class Game {
     }
   }
 
+  //"fer perdre a algú", treure'l de la llista de players (les cartes es queden inactives, no tornen al deck)
   loseGame(loser) {
     this._loser = this.players[loser].name;
     console.log("Oh no, " + this.loser + " loses!");
@@ -230,6 +223,7 @@ class Game {
     if (loser + 1 > this._players.length) this._currentPlayer = 0;
   }
 
+  //comparar les cartes de les paletes que compleixen la norma actual
   compareRulePalettes() {
     let palettes = [];
 
@@ -288,10 +282,6 @@ class Game {
     for (let i = 0; i < this.players.length; i++) {
       if (this.players[i].name == name) return i;
     }
-  }
-
-  get playersLength() {
-    return this._players.length;
   }
 }
 
