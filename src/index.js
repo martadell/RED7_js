@@ -1,5 +1,4 @@
-const _ = require("lodash");
-const { Game } = require("./dist/game");
+const { Game } = require("./game.js");
 
 //inici del joc amb 4 jugadors
 let numPlayers = 4;

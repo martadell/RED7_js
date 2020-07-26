@@ -1,7 +1,9 @@
 # Key project 02: Card Game in Javascript
 RED7 Cards game library in JavaScript
 
-This project consists of a JavaScript library that represents the RED7 card game. You can find the original game rules <a href="https://github.com/martadell/RED7_js/blob/master/src/Red7Rules.pdf">here</a>.
+This project consists of a JavaScript library that represents the RED7 card game. You can find the original game rules <a href="https://github.com/martadell/RED7_js/blob/master/doc/Red7Rules.pdf">here</a>.
+
+![screenshot](https://github.com/martadell/RED7_js/blob/master/doc/screenshot.png)
 
 This is a simplified* version of the actual game. The game ends when there is only one player left (and it becomes the winner). Apart from the color rules I have implemented the action rules aswell, but theese are not available in the random demo. Since the game requires a lot of user interaction I could not simulate it with random numbers all the time (also the game ends really fast if you keep playing with random cards because each round the player has to win).
 

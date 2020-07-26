@@ -134,7 +134,7 @@ class Game {
     }
   }
 
-  //ACTION RULES ONLY TESTED (and implemented) index.js !!
+  //ACTION RULES ONLY TESTED (and implemented) in index.js !!
   checkActionRule(cardNum) {
     if (cardNum == 1 || cardNum == 3 || cardNum == 5 || cardNum == 7)
       this._actionRule = cardNum;
