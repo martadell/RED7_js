@@ -109,7 +109,7 @@ let hCards = getHandCards();
 
   for (let i = 0; i < hCards.length; i++) {
   hCards[i].onclick = function () {
-    if(game.actionRule != 1 && game.actionRule != 7 && game.actionRule !=3){
+    if(game.actionRule != 1 || game.actionRule != 7 || game.actionRule !=3){
       if (currentMove == "h" || currentMove == 0) alert("Please select first your game option");
       else {
         document.getElementById("aRule").innerHTML = "";
@@ -154,15 +154,11 @@ function makeonClickPalette(pName) {
       //aqui mostrem només els botons de canviar regla i acabar
       if (game.actionRule == 1 || game.actionRule == 7) {
         if(!game.checkLongestPalette()) {
-          console.log("longest")
           if (//si cliquem una carta que no sigui de la nostra paleta
           game.players[game.currentPlayer].name != pName
         ) {           
           //mirem si la paleta jugadora no és més gran que les demés
-          console.log("game.getPlayerIndexByName(pName): "+game.getPlayerIndexByName(pName))
-          console.log("i: "+i);
           let check = game.action1(game.getPlayerIndexByName(pName), i);
-          console.log("check"+check);
           if (check == 0) {
             alert(
               "You selected a player with less cards than you, please choose another one"
