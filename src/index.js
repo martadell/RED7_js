@@ -15,8 +15,8 @@ let currentMove = 0;
 
 //Buttons
 ////Restart: reinicia el joc amb el numero de jugadors seleccionats
-let restartBttn = document.getElementById("restartBttn");
-restartBttn.onclick = function () {
+let bttnRestart = document.getElementById("bttnRestart");
+bttnRestart.onclick = function () {
   let aValue = confirm(
     "Do you want to restart the game with the players you selected?"
   );
@@ -29,24 +29,22 @@ restartBttn.onclick = function () {
 };
 
 ////Card to palette, es pitja abans de jugar una carta de la Hand a la Palette
-let ctPaletteBttn = document.getElementById("ctPaletteBttn");
-ctPaletteBttn.onclick = function () {
+let bttnPalette = document.getElementById("bttnPalette");
+bttnPalette.onclick = function () {
   currentMove = 1;
-  ctPaletteBttn.classList.add("selected");
-  document.getElementById("ctPaletteBttn").style.display = "none";
+  bttnPalette.classList.add("selected");
 };
 
 ////Card as rule, es pitja abans de jugar una carta de la Hand com a regla
-let caRuleBttn = document.getElementById("caRuleBttn");
-caRuleBttn.onclick = function () {
+let bttnRule = document.getElementById("bttnRule");
+bttnRule.onclick = function () {
   currentMove = 2;
-  caRuleBttn.classList.add("selected");
-  document.getElementById("ctPaletteBttn").style.display = "none";
+  bttnRule.classList.add("selected");
 };
 
 ////Finish (havent tirat carta a la palette podem triar acabar el torn)
-let finishBttn = document.getElementById("finishBttn");
-finishBttn.onclick = function () {
+let bttnFinish = document.getElementById("bttnFinish");
+bttnFinish.onclick = function () {
   let aValue = confirm(
     "Are you sure you are done? You may lose the if you don't follow the actual color rule ):"
   );
@@ -75,18 +73,19 @@ function checkWinner() {
     }
   }
 
-  //i tornem a mostrar el primer i amagar l'extra
-  if (currentMove != 1) {
-    showButtons();
-    currentMove = 0;
-  }
-
   //busquem si ha perdut algú i ho fiquem en blanc perquè es noti
   if (game.players.length < playersCont) {
     document.getElementById(game.loser).classList.add("unavailable");
 
     alert("Oh no! Player " + game.loser.substring(1) + " has lost");
     playersCont--;
+  }  
+
+  //i tornem a mostrar el primer i amagar l'extra
+  if (currentMove != "h" && currentMove != -1) {
+    showButtons();
+    currentMove = 0;
+    document.getElementById("aRule").innerHTML = "";
   }
 
   //canvi de torn al següent jugador al text d'adalt
@@ -107,25 +106,38 @@ function checkWinner() {
 //Cartes
 ////Hand: Al sel·leccionar una carta de la hand es jugarà a la palette
 let hCards = getHandCards();
-for (let i = 0; i < hCards.length; i++) {
+
+  for (let i = 0; i < hCards.length; i++) {
   hCards[i].onclick = function () {
-    if (currentMove == 0) alert("Please select first your game option");
-    else {
-      document.getElementById("aRule").innerHTML = "";
-      game.makeAMove(currentMove, i);
-      if (currentMove == 1) actionRuleMove();
-      checkWinner();
-      if ( //si no juguem una carta d'acció abans reiniciem el tema de botons i text de cartes d'acció
-        game.actionRule != 5 &&
-        game.actionRule != 1 &&
-        game.actionRule != 7
-      ) {
-        currentMove = 0;
+    if(game.actionRule != 1 && game.actionRule != 7 && game.actionRule !=3){
+      if (currentMove == "h" || currentMove == 0) alert("Please select first your game option");
+      else {
         document.getElementById("aRule").innerHTML = "";
-        showButtons();
-      }
+        if (currentMove == -1) {
+          document.getElementById("bttnRule").style.display = "block";
+          document.getElementById("bttnFinish").style.display = "block";
+          prevAction = null;
+          currentMove = 1;
+        }
+
+        game.makeAMove(currentMove, i);
+
+        if (currentMove == 1) {
+          currentMove = "h";
+          actionRuleMove();
+          if(game.actionRule == 5) {
+            currentMove = -1;
+          }
+          document.getElementById("bttnPalette").style.display = "none";
+        }
+        if (currentMove == 2) {
+          document.getElementById("bttnRule").style.display = "none";
+        }
+        
+        checkWinner();
     }
     return false;
+  }
   };
 }
 
@@ -141,29 +153,32 @@ function makeonClickPalette(pName) {
     pCards[i].onclick = function () {
       //aqui mostrem només els botons de canviar regla i acabar
       if (game.actionRule == 1 || game.actionRule == 7) {
-        if (//si action rule = 1 i cliquem una carta que no sigui de la nostra paleta
-          game.actionRule == 1 &&
+        if(!game.checkLongestPalette()) {
+          console.log("longest")
+          if (//si cliquem una carta que no sigui de la nostra paleta
           game.players[game.currentPlayer].name != pName
-        ) {
-          document.getElementById("aRule").innerHTML = "";
-          showButtonsR();          
+        ) {           
           //mirem si la paleta jugadora no és més gran que les demés
+          console.log("game.getPlayerIndexByName(pName): "+game.getPlayerIndexByName(pName))
+          console.log("i: "+i);
           let check = game.action1(game.getPlayerIndexByName(pName), i);
+          console.log("check"+check);
           if (check == 0) {
             alert(
-              "You selected a player with less cards than you, please chose another one"
+              "You selected a player with less cards than you, please choose another one"
             );
           }
-          if (check == 1) {
+          if (check == 1) {            
+            document.getElementById("aRule").innerHTML = "";            
+            document.getElementById("bttnRule").style.display = "block";  
+            document.getElementById("bttnFinish").style.display = "block";
             changePalettes();
           }//sino seguim
-        } else if (
+        }} else if (
           //si action rule = 7 i cliquem una carta de la nostra paleta
           game.actionRule == 7 &&
           game.players[game.currentPlayer].name == pName
-        ) {          
-          document.getElementById("aRule").innerHTML = "";
-          showButtonsR();
+        ) {
           //preguntem què volem fer amb la carta
           let aValue = confirm(
             "Play card as a new rule? (if not it will be discarded to the deck pile)"
@@ -171,10 +186,15 @@ function makeonClickPalette(pName) {
           if (aValue == true) {
             game.action7(i);
             checkWinner();
+            showButtons();
+            document.getElementById("aRule").innerHTML = "";  
             return true;
-          } else {//o retornar-la a la pila
+          } else {//o retornar-la a la pila (i jugar una altra de regla si vols)
             game.action7discard(i);
             changePalettes();
+            document.getElementById("aRule").innerHTML = "";            
+            document.getElementById("bttnRule").style.display = "block";
+            document.getElementById("bttnFinish").style.display = "block";
             return true;
           }
         }
@@ -187,12 +207,15 @@ function makeonClickPalette(pName) {
 function actionRuleMove() {
   switch (game.actionRule) {
     case 1:
-      document.getElementById("aRule").innerHTML =
-        "Action rule: 1, choose a card from another player's palette";
-      hideButtons();
+      if(!game.checkLongestPalette()) {
+        document.getElementById("aRule").innerHTML =
+          "Action rule: 1, choose a card from another player's palette";
+        hideButtons();
+      }
       break;
     case 3:
       game.action3();
+      document.getElementById("bttnPalette").style.display = "none";
       break;
     case 5:
       document.getElementById("aRule").innerHTML =
@@ -206,7 +229,6 @@ function actionRuleMove() {
       break;
     default:
       document.getElementById("aRule").innerHTML = "";
-      hideButtons();
       break;
   }
 }
@@ -259,18 +281,15 @@ function restart() {
 
 function showButtons() {
   //Es crida al acabar un moviment
-  document.getElementById("ctPaletteBttn").style.display = "block";
-  document.getElementById("caRuleBttn").style.display = "block";
-}
-
-function showButtonsR() {
-  //es crida al tirar un 1 o 7
-  document.getElementById("caRuleBttn").style.display = "block";
+  document.getElementById("bttnPalette").style.display = "block";
+  document.getElementById("bttnRule").style.display = "block";
+  document.getElementById("bttnFinish").style.display = "block";
 }
 
 function hideButtons() {
-  document.getElementById("ctPaletteBttn").style.display = "none";
-  document.getElementById("caRuleBttn").style.display = "none";
+  document.getElementById("bttnPalette").style.display = "none";
+  document.getElementById("bttnRule").style.display = "none";
+  document.getElementById("bttnFinish").style.display = "none";
 }
 
 //"Creadors" i "canviadors" d'elements

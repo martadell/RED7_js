@@ -141,6 +141,14 @@ class Game {
     else this._actionRule = 0;
   }
 
+  checkLongestPalette() {
+    for(let i=0; i<this.players.length; i++) {
+      if (this.players[i].palette.length < this.players[this.currentPlayer].palette.length) return true;
+    }
+
+  return false;
+  }
+
   action1(iPlayer2, iP2Card) {
     this._actionRule = 0;
     //roba una carta d'un rival i descarta-la a la pila
@@ -149,8 +157,7 @@ class Game {
       if (
         this.players[i].palette.length >
         this.players[this.currentPlayer].palette.length
-      )
-        checkFirst = true;
+      ) checkFirst = true;
     }
 
     if (checkFirst) {
@@ -160,12 +167,12 @@ class Game {
       ) {
         this.deck.addOne(this._players[iPlayer2].takeCardFromPalette(iP2Card));
         return 1;
-      } else {
+      } 
+    } else {
         console.log(
           "You selected a player with less cards than you, please choose another one"
         );
         return 0;
-      }
     }
   }
 
@@ -260,8 +267,6 @@ class Game {
       }
       return 0;
     });
-
-    console.log(palettes);
 
     if (palettes[0].length !== 0) {
       //filtre per si "ningu guanya" (perdrà el jugador actual igualment)
